@@ -3,6 +3,7 @@
 <form method="post" asp-action="Login" asp-controller="Home">
     <div class="form-group row" style="margin-top:20px">
         <label class="col-md-2" asp-for="email"></label>
+        Email
         <div class="col-md-10">
             <input asp-for="email" class="form-control" />
             <span asp-validation-for="email" class="text-danger"></span>
