@@ -1,0 +1,59 @@
+﻿@model DDAC_Assignment_2._0.Models.RegisterVM
+
+<form method="post" asp-action="Register" asp-controller="Home">
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="userName"></label>
+        <div class="col-md-10">
+            <input asp-for="userName" class="form-control" />
+            <span asp-validation-for="userName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="email"></label>
+        <div class="col-md-10">
+            <input asp-for="email" class="form-control" />
+            <span asp-validation-for="email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="password"></label>
+        <div class="col-md-10">
+            <input asp-for="password" class="form-control" />
+            <span asp-validation-for="password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="confirmPassword"></label>
+        <div class="col-md-10">
+            <input asp-for="confirmPassword" class="form-control" />
+            <span asp-validation-for="confirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="contactNumber"></label>
+        <div class="col-md-10">
+            <input asp-for="contactNumber" class="form-control" />
+            <span asp-validation-for="contactNumber" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <label class="col-md-2" asp-for="roleName"></label>
+        <div class="col-md-10">
+            <input type="hidden" name="roleName" value="Customer" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group row" style="margin-top:20px">
+        <div class="col-md-10 offset-md-2">
+            <button type="submit" value="Register" class="btn btn-success">Register</button>
+        </div>
+    </div>
+    <p class="col-md-10 offset-md-2" style="margin-top:20px">
+        <a asp-action="Login">Sign In</a>
+    </p>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
