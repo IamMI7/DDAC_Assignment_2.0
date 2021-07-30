@@ -2,14 +2,14 @@
     <div class="container">
         <form method="post" asp-action="Register" asp-controller="Home">
             <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2" asp-for="userName"></label>
+                <label class="col-md-2">Username</label>
                 <div class="col-md-10">
                     <input asp-for="userName" class="form-control" />
                     <span asp-validation-for="userName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2" asp-for="email"></label>
+                <label class="col-md-2">Email</label>
                 <div class="col-md-10">
                     <input asp-for="email" class="form-control" />
                     <span asp-validation-for="email" class="text-danger"></span>
