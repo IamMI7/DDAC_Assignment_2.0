@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DDAC_Assignment_2._0.Controllers
@@ -16,18 +17,20 @@ namespace DDAC_Assignment_2._0.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ApplicationDbContext _db;
         BlobtheController blob = new BlobtheController();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
-            , RoleManager<IdentityRole> roleManager, ApplicationDbContext db)
+            , RoleManager<IdentityRole> roleManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _db = db;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
@@ -53,6 +56,19 @@ namespace DDAC_Assignment_2._0.Controllers
         [HttpPost]
         public IActionResult SubmitIdea(IdeaVM model, IFormFile images)
         {
+            string uname = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+
+            List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in mvm)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
+
             blob.CreateBlobContainer("ideasblob");
             if (_signInManager.IsSignedIn(User))
             {
@@ -62,10 +78,10 @@ namespace DDAC_Assignment_2._0.Controllers
                     IdeaVM data = new IdeaVM()
                     {
                         Title = model.Title,
-                        Curator = "User",
+                        Curator = uname,
                         DatePublish = DateTime.Now.Date,
                         Material = model.Material,
-                        Image = images.FileName + "#" + "User" + "@" + DateTime.Now,
+                        Image = uname + "/" + DateTime.Now.TimeOfDay + "#" + images.FileName,
                         Message = model.Message
                     };
                     _db.Ideas.Add(data);
