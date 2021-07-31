@@ -38,10 +38,34 @@
             <div class="container">
 
                 <div class="section-title">
-                    <h2>Ideas</h2>
-                    <p>A list of Ideas.</p>
+                    <h2>Materials</h2>
+                    <p>Please select a type of material.</p>
                 </div>
 
+                <div class="row portfolio-container">
+                    @{ int i = 0; }
+                    @foreach (var x in (List<IdeaVM>)ViewData["IdeasListVM"])
+                    {
+                        
+                    <form method="post" action="IdeasInner" id="form+@i">
+                        <div class="col-lg-4 col-md-6 portfolio-item">
+                            <div class="portfolio-wrap" onclick="document.getElementById('form+'+@i).submit()">
+                                <img src="@x.Image" class="img-fluid" alt="">
+                                <div class="portfolio-info">
+                                    <h4>@x.Title</h4>
+                                    <p>@x.Curator</p>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Image" value="@x.Image" />
+                        <input type="hidden" name="Curator" value="@x.Curator" />
+                        <input type="hidden" name="Message" value="@x.Message" />
+                        <input type="hidden" name="DatePublish" value="@x.DatePublish" />
+                        <input type="hidden" name="Title" value="@x.Title" />
+                        @{i++;}
+                    </form>
+                    }
+                </div>
 
             </div>
         </section><!-- End Ideas Page Section -->

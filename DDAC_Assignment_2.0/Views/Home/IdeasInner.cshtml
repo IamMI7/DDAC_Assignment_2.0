@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model IdeaVM
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,38 +35,36 @@
 
     <main id="main">
 
-        <!-- ======= Materials Page Section ======= -->
-        <section id="portfolio" class="portfolio">
+        <!-- ======= About Us Section ======= -->
+        <section id="about" class="about">
             <div class="container">
 
                 <div class="section-title">
-                    <h2>Materials</h2>
-                    <p>Please select a type of material.</p>
+                    <h2>@Model.Title</h2>
+                    <p>Published By: @Model.Curator &emsp; Published On: @Model.DatePublish.Day/@Model.DatePublish.Month/@Model.DatePublish.Year</p>
                 </div>
 
-                <div class="row portfolio-container">
-                    @{ int i = 0; } 
-                    @foreach (var x in (List<String>)ViewData["MaterialsList"])
-                    {
-                        string[] link = x.Split("#");
-                        string[] name = link[0].Split(".");
-                        <form method="post" id="form+@i">
-                            <div class="col-lg-4 col-md-6 portfolio-item">
-                                <div class="portfolio-wrap" onclick="document.getElementById('form+'+@i).submit()">
-                                    <img src="@link[1]" class="img-fluid" alt="">
-                                    <div class="portfolio-info">
-                                        <h4>@name[0]</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="material" value="@name[0]"/>
-                            @{i++;}
-                        </form>
-                    }
+                <div class="row">
+                    <div class="col-lg-6 order-1 order-lg-2">
+                        <img src="@Model.Image" class="img-fluid" style="width:500px;height:500px" alt="">
+                    </div>
+                    <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
+                        <h3>Thanks for using our website!.</h3>
+                        <p class="fst-italic">
+                            By downloading the file below you consent to:
+                        </p>
+                        <ul>
+                            <li><i class="bi bi-check-circled"></i> Our Privacy Policy.</li>
+                            <li><i class="bi bi-check-circled"></i> Our Term & Conditions.</li>
+                        </ul>
+                        <p>
+                            Please click <u onclick="location.href = '@Model.Message';">Here</u> to download your file.
+                        </p>
+                    </div>
                 </div>
 
             </div>
-        </section><!-- End Materials Page Section -->
+        </section><!-- End About Us Section -->
 
     </main><!-- End #main -->
 

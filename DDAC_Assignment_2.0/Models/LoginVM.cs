@@ -9,7 +9,7 @@ namespace DDAC_Assignment_2._0.Models
     public class LoginVM
     {
         [Required]
-        public string email { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

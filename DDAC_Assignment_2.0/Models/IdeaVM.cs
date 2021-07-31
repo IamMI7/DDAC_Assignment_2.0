@@ -29,19 +29,5 @@ namespace DDAC_Assignment_2._0.Models
         [Required]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Please Select a Material")]
         public string Material { get; set; }
-
-        //[NotMapped]
-        //public List<SelectListItem> MaterialList { get; } = new List<SelectListItem>
-        //{
-        //    new SelectListItem { Value = "Cardboard", Text = "Cardboard" },
-        //    new SelectListItem { Value = "Glass", Text = "Glass" },
-        //    new SelectListItem { Value = "Plastic", Text = "Plastic" },
-        //    new SelectListItem { Value = "Cans", Text = "Metal/Tin Cans" },
-        //    new SelectListItem { Value = "Wood", Text = "Wood" },
-        //    new SelectListItem { Value = "Paper", Text = "Paper" },
-        //    new SelectListItem { Value = "Clothing", Text = "Clothing" },
-        //    new SelectListItem { Value = "Furniture", Text = "Furniture" },
-        //    new SelectListItem { Value = "Other", Text = "Other" }
-        //};
     }
 }

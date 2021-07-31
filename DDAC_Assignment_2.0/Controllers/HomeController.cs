@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,6 +23,11 @@ namespace DDAC_Assignment_2._0.Controllers
         BlobtheController blob = new BlobtheController();
         private readonly ILogger<HomeController> _logger;
 
+        //Blob Names:
+        string blobIdeasImg = "ideasblob";
+        string blobIdeasFile = "ideasfileblob";
+        string blobMatImg = "materialsblob";
+
         public HomeController(ILogger<HomeController> logger, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
             , RoleManager<IdentityRole> roleManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
@@ -38,70 +44,9 @@ namespace DDAC_Assignment_2._0.Controllers
             return View();
         }
 
+
         [HttpGet]
-        public IActionResult SubmitIdea()
-        {
-            List<MaterialsVM> model = (from x in _db.Materials select x).ToList();
-
-            List<String> y = new List<String>();
-
-            foreach(var z in model)
-            {
-                y.Add(z.Material);
-            }
-
-            ViewBag.Materials = y;
-            return View();
-        }
-        [HttpPost]
-        public IActionResult SubmitIdea(IdeaVM model, IFormFile images)
-        {
-            string uname = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-
-            List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
-
-            List<String> y = new List<String>();
-
-            foreach (var z in mvm)
-            {
-                y.Add(z.Material);
-            }
-
-            ViewBag.Materials = y;
-
-            blob.CreateBlobContainer("ideasblob");
-            if (_signInManager.IsSignedIn(User))
-            {
-                if (ModelState.IsValid)
-                {
-
-                    IdeaVM data = new IdeaVM()
-                    {
-                        Title = model.Title,
-                        Curator = uname,
-                        DatePublish = DateTime.Now.Date,
-                        Material = model.Material,
-                        Image = uname + "/" + DateTime.Now.TimeOfDay + "#" + images.FileName,
-                        Message = model.Message
-                    };
-                    _db.Ideas.Add(data);
-                    _db.SaveChanges();
-                    blob.UploadBlob(images, data.Image, "ideasblob");
-                }
-                else
-                {
-                    return View();
-                }
-            }
-            else
-            {
-                ViewData["SignState"] = "NotSigned";
-                return View();
-            }
-            return View();
-        }
-
-        public IActionResult Privacy()
+        public IActionResult Login()
         {
             return View();
         }
@@ -111,19 +56,13 @@ namespace DDAC_Assignment_2._0.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var result = await _signInManager.PasswordSignInAsync(model.email, model.password,model.rememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.password,model.rememberMe, false);
                 if (result.Succeeded) 
                 {
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Invalid login attempts.");
             }
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Login() 
-        {
             return View();
         }
 
@@ -163,6 +102,72 @@ namespace DDAC_Assignment_2._0.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        public IActionResult SubmitIdea()
+        {
+            List<MaterialsVM> model = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in model)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SubmitIdea(IdeaVM model, IFormFile images, IFormFile document)
+        {
+            List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in mvm)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
+
+            
+            if (_signInManager.IsSignedIn(User))
+            {
+                string uname = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                if (ModelState.IsValid)
+                {
+
+                    IdeaVM data = new IdeaVM()
+                    {
+                        Title = model.Title,
+                        Curator = uname,
+                        DatePublish = DateTime.Now.Date,
+                        Material = model.Material,
+                        Image = uname + "@" + DateTime.Now.TimeOfDay + "#" + images.FileName,
+                        Message = uname + "@" + DateTime.Now.TimeOfDay + "#" + document.FileName
+                    };
+                    _db.Ideas.Add(data);
+                    _db.SaveChanges();
+                    blob.CreateBlobContainer(blobIdeasImg);
+                    blob.UploadBlob(images, data.Image, blobIdeasImg);
+                    blob.CreateBlobContainer(blobIdeasFile);
+                    blob.UploadBlob(document, data.Message, blobIdeasFile);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                ViewData["SignState"] = "NotSigned";
+                return View();
+            }
+            return View();
+        }
+
         [HttpGet]
         public IActionResult MaterialsPage()
         {
@@ -172,7 +177,7 @@ namespace DDAC_Assignment_2._0.Controllers
             {
                 ImageNames.Add(x.ImageName);
             }
-            List<String> imagesource = blob.GetMaterialsImage(ImageNames, "materialsblob");
+            List<String> imagesource = blob.GetMaterialsImage(ImageNames, blobMatImg);
 
             ViewData["MaterialsList"] = imagesource;
 
@@ -181,14 +186,51 @@ namespace DDAC_Assignment_2._0.Controllers
         [HttpPost]
         public IActionResult MaterialsPage(string material)
         {
+            TempData["materialselection"] = material;
             return RedirectToAction("IdeasPage");
         }
 
         [HttpGet]
         public IActionResult IdeasPage()
         {
+            string Smaterial = (string)TempData["materialselection"];
+            List<String> model = new List<String>();
+            List<String> file = new List<String>();
+
+            List<IdeaVM> ivm = (from x in _db.Ideas where x.Material == Smaterial select x).ToList();
+
+            foreach(var y in ivm)
+            {
+                model.Add(y.Image);
+                file.Add(y.Message);
+            }
+
+            model = blob.getBlobFileLink(model, blobIdeasImg);
+            file = blob.getBlobFileLink(file, blobIdeasFile);
+
+            for (int i = 0; i < ivm.Count; i++)
+            {
+                ivm[i].Image = model[i];
+                ivm[i].Message = file[i];
+            }
+
+            ViewData["IdeasListVM"] = ivm;
+
             return View();
         }
+
+        [HttpPost]
+        public IActionResult IdeasInner(IdeaVM model)
+        {
+            return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

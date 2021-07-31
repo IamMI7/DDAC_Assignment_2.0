@@ -6,18 +6,12 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DDAC_Assignment_2._0.Controllers
 {
     public class BlobtheController : Controller
     {
-        //Blob Names:
-        //ideasblob
-        //materialsblob
-
-
+        //Retrieve Blob Information
         private CloudBlobContainer getBlobStorageInformation(string blobname)
         {
             //step 1: read json
@@ -34,27 +28,21 @@ namespace DDAC_Assignment_2._0.Controllers
             return container;
         }
 
-        //step 3: create a page to show the successful step - whether you success to build the container or not
+        //Create blob if does not exist
         public bool CreateBlobContainer(string blobname)
         {
-            //refer to the blob storage connection string
             CloudBlobContainer container = getBlobStorageInformation(blobname);
-            //Returns true if container does not exists and is created / false if existing
             container.CreateIfNotExistsAsync();
             return true;
         }
 
+        //Upload File to Blob
         public String UploadBlob(IFormFile images, string filename, string blobname)
         {
-            //Finds blob container name
             CloudBlobContainer container = getBlobStorageInformation(blobname);
 
-            //Block blob is a type of blob
             CloudBlockBlob blob = container.GetBlockBlobReference(filename);
 
-            //Upload data stream to blob container
-            //UploadFromStream creates a new blob if it doesnt exist or overwrites it if it does exist
-            //using (var fileStream = System.IO.File.OpenRead(@"C:\Users\user\Desktop\SuperFolder\Wallpaper\Olivia.jpg"))
             using (var fileStream = images.OpenReadStream())
             {
                 blob.UploadFromStreamAsync(fileStream).Wait();
@@ -63,6 +51,7 @@ namespace DDAC_Assignment_2._0.Controllers
             return "Success!";
         }
 
+        //Retrieve Materials Image
         public List<String> GetMaterialsImage(List<String> model, string blobname)
         {
             CloudBlobContainer container = getBlobStorageInformation(blobname);
@@ -77,14 +66,46 @@ namespace DDAC_Assignment_2._0.Controllers
                 {
                     CloudBlockBlob blob = (CloudBlockBlob)item;
                     //Query Images
-                    foreach(var x in model)
+                    foreach (var x in model)
                     {
-                        if(blob.Name == x)
+                        if (blob.Name == x)
                         {
                             blobs.Add(blob.Name + "#" + blob.Uri.ToString());
                         }
                     }
-                    
+
+                }
+                else
+                {
+                    return model;
+                }
+            }
+            return blobs;
+        }
+
+        //Retrieve user uploaded Ideas Images
+        public List<String> getBlobFileLink(List<String> model, string blobname)
+        {
+            CloudBlobContainer container = getBlobStorageInformation(blobname);
+
+            List<string> blobs = new List<string>();
+
+            BlobResultSegment result = container.ListBlobsSegmentedAsync(null).Result;
+
+            foreach (IListBlobItem item in result.Results)
+            {
+                if (item.GetType() == typeof(CloudBlockBlob))
+                {
+                    CloudBlockBlob blob = (CloudBlockBlob)item;
+                    //Query Images
+                    foreach (var x in model)
+                    {
+                        if (blob.Name == x)
+                        {
+                            blobs.Add(blob.Uri.ToString());
+                        }
+                    }
+
                 }
                 else
                 {
@@ -94,4 +115,5 @@ namespace DDAC_Assignment_2._0.Controllers
             return blobs;
         }
     }
+    
 }

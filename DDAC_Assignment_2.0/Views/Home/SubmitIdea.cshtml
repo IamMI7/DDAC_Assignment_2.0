@@ -61,7 +61,7 @@
                 <div class="row">
                     <section>
                         <form method="post" enctype="multipart/form-data"
-                              asp-controller="Home" asp-action="SubmitIdea">
+                              asp-controller="Home" asp-action="SubmitIdea" onsubmit="return checkFile()">
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>Title</label>
@@ -74,16 +74,17 @@
                                 </div>
                             </div>
                             <div class="form-group mt-3">
-                                <label for="name">Message</label>
-                                <textarea class="form-control" name="message" rows="10" required></textarea>
+                                <label for="name">Please provide detailed steps and tools needed in a .txt, .docx, .doc, or .pdf file.</label>
+                                <input type="file" id="messageFile" name="document" class="form-control" accept=".txt,.docx,.doc,.pdf" required/>
                                 <span asp-validation-for="Message" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <div class="form-group mt-3">
                                     <p>Please upload a picture of your creation:</p>
-                                    <input type="file" name="images" class="form-control" required/>
+                                    <input type="file" id="uploadFile" name="images" class="form-control" accept=".jpg,.jpeg,.png" required/>
                                 </div>
                             </div>
+                            <input type="hidden" name="Message" value="test"/>
                             <div id="StatMsg"></div>
                             <div class="form-group mt-3">
                                 <input type="submit" value="Submit" style="margin-top:10px" class="btn btn-success"/>
@@ -124,4 +125,33 @@
         }
     };
 
+    function checkFile() {
+        var fileElement = document.getElementById("uploadFile");
+        var fileExtension = "";
+        if (fileElement.value.lastIndexOf(".") > 0) {
+            fileExtension = fileElement.value.substring(fileElement.value.lastIndexOf(".") + 1, fileElement.value.length);
+        }
+        if (fileExtension.toLowerCase() == "jpg" || fileExtension.toLowerCase() == "jpeg" || fileExtension.toLowerCase() == "png") {
+            return true;
+        }
+        else {
+            alert("Only .jpg, .jpeg, and .png files are supported");
+            return false;
+        }
+    }
+
+    function checkFile2() {
+        var fileElement = document.getElementById("messageFile");
+        var fileExtension = "";
+        if (fileElement.value.lastIndexOf(".") > 0) {
+            fileExtension = fileElement.value.substring(fileElement.value.lastIndexOf(".") + 1, fileElement.value.length);
+        }
+        if (fileExtension.toLowerCase() == "txt" || fileExtension.toLowerCase() == "doc" || fileExtension.toLowerCase() == "docx" || fileExtension.toLowerCase() == "pdf") {
+            return true;
+        }
+        else {
+            alert("Only .txt, .doc, .docx, and .pdf files are supported");
+            return false;
+        }
+    }
 </script>
