@@ -71,37 +71,42 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Material)
                                     </th>
-                                    <th></th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Status)
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Image)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Title)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Curator)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DatePublish)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Message)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Material)
-                                        </td>
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@item.IdeaID">Edit</a> |
-                                            <a asp-action="Details" asp-route-id="@item.IdeaID">Details</a> |
-                                            <a asp-action="Delete" asp-route-id="@item.IdeaID">Delete</a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Image)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Curator)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DatePublish)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Message)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Material)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.IdeaID">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.IdeaID">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.IdeaID">Delete</a>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>

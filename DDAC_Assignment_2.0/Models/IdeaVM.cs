@@ -29,5 +29,8 @@ namespace DDAC_Assignment_2._0.Models
         [Required]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Please Select a Material")]
         public string Material { get; set; }
+
+        [Required]
+        public bool Status { get; set; }
     }
 }

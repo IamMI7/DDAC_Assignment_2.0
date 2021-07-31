@@ -89,7 +89,7 @@ namespace DDAC_Assignment_2._0.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdeaID,Image,Title,Curator,DatePublish,Message,Material")] IdeaVM ideaVM)
+        public async Task<IActionResult> Edit(int id, [Bind("IdeaID,Image,Title,Curator,DatePublish,Message,Material,Status")] IdeaVM ideaVM)
         {
             if (id != ideaVM.IdeaID)
             {

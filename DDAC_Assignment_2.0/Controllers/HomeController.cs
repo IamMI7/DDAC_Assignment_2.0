@@ -118,7 +118,6 @@ namespace DDAC_Assignment_2._0.Controllers
             ViewBag.Materials = y;
             return View();
         }
-        [HttpPost]
         public IActionResult SubmitIdea(IdeaVM model, IFormFile images, IFormFile document)
         {
             List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
@@ -146,7 +145,8 @@ namespace DDAC_Assignment_2._0.Controllers
                         DatePublish = DateTime.Now.Date,
                         Material = model.Material,
                         Image = uname + "@" + DateTime.Now.TimeOfDay + "#" + images.FileName,
-                        Message = uname + "@" + DateTime.Now.TimeOfDay + "#" + document.FileName
+                        Message = uname + "@" + DateTime.Now.TimeOfDay + "#" + document.FileName,
+                        Status = false
                     };
                     _db.Ideas.Add(data);
                     _db.SaveChanges();
@@ -154,6 +154,9 @@ namespace DDAC_Assignment_2._0.Controllers
                     blob.UploadBlob(images, data.Image, blobIdeasImg);
                     blob.CreateBlobContainer(blobIdeasFile);
                     blob.UploadBlob(document, data.Message, blobIdeasFile);
+
+                    ViewData["SignState"] = "Submitted";
+                    return View();
                 }
                 else
                 {
@@ -165,7 +168,7 @@ namespace DDAC_Assignment_2._0.Controllers
                 ViewData["SignState"] = "NotSigned";
                 return View();
             }
-            return View();
+            
         }
 
         [HttpGet]
@@ -197,7 +200,7 @@ namespace DDAC_Assignment_2._0.Controllers
             List<String> model = new List<String>();
             List<String> file = new List<String>();
 
-            List<IdeaVM> ivm = (from x in _db.Ideas where x.Material == Smaterial select x).ToList();
+            List<IdeaVM> ivm = (from x in _db.Ideas where x.Material == Smaterial && x.Status == true select x).ToList();
 
             foreach(var y in ivm)
             {

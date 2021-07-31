@@ -85,6 +85,11 @@
                                         <input asp-for="Material" class="form-control" />
                                         <span asp-validation-for="Material" class="text-danger"></span>
                                     </div>
+                                    <div class="form-group">
+                                        <label asp-for="Status" class="control-label"></label>
+                                        <input type="checkbox" value=false id="statuscheck" name="Status" onclick="checker()"/>
+                                        <span asp-validation-for="Status" class="text-danger"></span>
+                                    </div>
                                     <br />
                                     <div class="form-group">
                                         <input type="submit" value="Save" class="btn btn-primary" />
@@ -113,6 +118,20 @@
 
         <!-- Template Main JS File -->
         <script src="~/assets/js/main.js"></script>
+
+        <script>
+            function checker() {
+                var checkbox = document.getElementById("statuscheck");
+
+                var checkme = checkbox.value;
+
+                if (checkme == "true") {
+                    checkbox.value = false;
+                } else if (checkme == "false") {
+                    checkbox.value = true;
+                }
+            }
+        </script>
 
     </body>
 

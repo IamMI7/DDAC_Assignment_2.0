@@ -74,8 +74,8 @@
                                 </div>
                             </div>
                             <div class="form-group mt-3">
-                                <label for="name">Please provide detailed steps and tools needed in a .txt, .docx, .doc, or .pdf file.</label>
-                                <input type="file" id="messageFile" name="document" class="form-control" accept=".txt,.docx,.doc,.pdf" required/>
+                                <label for="name">Please provide detailed steps and tools needed in a .txt, .docx, .doc, .pdf, or .mp4 file.</label>
+                                <input type="file" id="messageFile" name="document" class="form-control" accept=".txt,.docx,.doc,.pdf,.mp4" required/>
                                 <span asp-validation-for="Message" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -122,6 +122,9 @@
         } else if (getStatus == "NotSigned") {
             document.getElementById("StatMsg").innerHTML = "Please Login or Register an account to submit an idea.";
             document.getElementById("StatMsg").style.color = "#ff0033";
+        } else if (getStatus == "Submitted") {
+            document.getElementById("StatMsg").innerHTML = "Successfully Submitted.";
+            document.getElementById("StatMsg").style.color = "#4BB543";
         }
     };
 
@@ -146,11 +149,12 @@
         if (fileElement.value.lastIndexOf(".") > 0) {
             fileExtension = fileElement.value.substring(fileElement.value.lastIndexOf(".") + 1, fileElement.value.length);
         }
-        if (fileExtension.toLowerCase() == "txt" || fileExtension.toLowerCase() == "doc" || fileExtension.toLowerCase() == "docx" || fileExtension.toLowerCase() == "pdf") {
+        if (fileExtension.toLowerCase() == "txt" || fileExtension.toLowerCase() == "doc" || fileExtension.toLowerCase() == "docx"
+            || fileExtension.toLowerCase() == "pdf" || fileExtension.toLowerCase() == "mp4") {
             return true;
         }
         else {
-            alert("Only .txt, .doc, .docx, and .pdf files are supported");
+            alert("Only .txt, .doc, .docx, .pdf, and .mp4 files are supported");
             return false;
         }
     }
