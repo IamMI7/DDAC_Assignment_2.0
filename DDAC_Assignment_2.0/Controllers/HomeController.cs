@@ -88,7 +88,7 @@ namespace DDAC_Assignment_2._0.Controllers
                     Email = model.email,
                     UserName = model.userName,
                     PhoneNumber = model.contactNumber,
-                    roleName = "Customer"
+                    roleName = model.roleName
                 }; 
 
                 var result = await _userManager.CreateAsync(user, model.password);
@@ -96,7 +96,6 @@ namespace DDAC_Assignment_2._0.Controllers
                 {
                     
                     await _userManager.AddToRoleAsync(user, model.roleName);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 } 
             }

@@ -32,7 +32,5 @@ namespace DDAC_Assignment_2._0.Models
 
         [Required]
         public bool Status { get; set; }
-        [StringLength(10)]
-        public string CuratorRole { get; set; }
     }
 }
