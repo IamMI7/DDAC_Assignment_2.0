@@ -13,5 +13,6 @@ namespace DDAC_Assignment_2._0.Models
 
         public DbSet<IdeaVM> Ideas { get; set; }
         public DbSet<MaterialsVM> Materials { get; set; }
+        public DbSet<SupportTicketVM> SupportTickets { get; set; }
     }
 }
