@@ -1,0 +1,31 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<DDAC_Assignment_2._0.Models.ApplicationUser> signInManager
+
+@if (signInManager.IsSignedIn(User))
+{
+    <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="ViewProfile">View Profile</a></li>
+    @if (User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.admin))
+    {
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="AdminGetStaffList">Staff List</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="AdminGetCustomerList">Customer List</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="ViewSupportTicket">Support Ticket</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Register">Register</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Logout">Log Out</a></li>
+    }
+    else if (User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.customer))
+    {
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="SubmitIdea">Submit Idea</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="MaterialsPage">Upcycling Ideas</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="IdeaVMs" asp-action="Index">Ideas Management</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Logout">Log Out</a></li>
+    }
+    else if (User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.staff))
+    {
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="IdeaVMs" asp-action="Index">Ideas Management</a></li>
+        <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Logout">Log Out</a></li>
+    }
+}
+else
+{
+    <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Login">Login</a></li>
+    <li><a class="nav-link scrollto" asp-area="" asp-controller="Home" asp-action="Register">Register</a></li>
+}

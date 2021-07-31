@@ -26,5 +26,7 @@ namespace DDAC_Assignment_2._0.Models
         [Required]
         [StringLength(600, MinimumLength = 10, ErrorMessage = "Message must be between 10 to 600 characters long.")]
         public string message { get; set; }
+        [StringLength(20)]
+        public string status { get; set; }
     }
 }

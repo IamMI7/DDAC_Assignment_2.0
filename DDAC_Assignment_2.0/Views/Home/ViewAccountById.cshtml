@@ -1,0 +1,45 @@
+﻿@model DDAC_Assignment_2._0.Models.UserVM
+
+@{
+    ViewData["Title"] = "ViewAccountById";
+}
+
+<div class="container">
+    <form method="post" asp-action="EditAccountById" asp-controller="Home">
+        <input class="form-control" asp-for="id" hidden />
+        <div class="form-group row">
+            <label class="col-md-2" asp-for="name"></label>
+            <div class="col-md-10">
+                <input type="text" asp-for="name" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" asp-for="email"></label>
+            <div class="col-md-10">
+                <input type="text" asp-for="email" readonly class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" asp-for="contactNumber"></label>
+            <div class="col-md-10">
+                <input type="text" asp-for="contactNumber" readonly class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2" asp-for="roleName"></label>
+            <div class="col-md-10">
+                <input type="text" asp-for="roleName" readonly class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row" style="margin-top:25px; float:right">
+            <div class="col-md-10 offset-md-2">
+                <input type="button" value="Back" onclick="history.go(-1)" class="btn btn-danger" />
+            </div>
+        </div>
+        <div class="form-group row" style="margin-top:25px; margin-right:15px; float:right">
+            <div class="col-md-10 offset-md-2">
+                <input type="submit" value="Save Changes" asp-action="EditAccountById" asp-controller="Home" class="btn btn-success" />
+            </div>
+        </div>
+    </form>
+</div>

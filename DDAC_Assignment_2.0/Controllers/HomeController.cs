@@ -234,6 +234,233 @@ namespace DDAC_Assignment_2._0.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult ViewSupportTicket()
+        {
+            string statusPending = "Pending";
+            List<SupportTicketVM> ticketList = (from list in _db.SupportTickets
+                                                where list.status == statusPending
+                                                select new SupportTicketVM()
+                                                {
+                                                    ID = list.ID,
+                                                    name = list.name,
+                                                    email = list.email,
+                                                    subject = list.subject,
+                                                    message = list.message,
+                                                    status = list.status,
+                                                }).ToList();
+            return View(ticketList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitSupportTicket(SupportTicketVM model)
+        {
+            int id = 0;
+            List<SupportTicketVM> tickerList = _db.SupportTickets.ToList();
+            int length = tickerList.Count();
+
+            if (length == 0)
+            {
+                id = 1;
+                model.ID = "ST" + id;
+            }
+            else
+            {
+                model.ID = "ST" + (length + 1);
+            }
+
+            model.status = "Pending";
+
+            if (ModelState.IsValid)
+            {
+                var ticket = new SupportTicketVM
+                {
+                    ID = model.ID,
+                    email = model.email,
+                    name = model.name,
+                    subject = model.subject,
+                    message = model.message,
+                    status = model.status
+                };
+                await _db.SupportTickets.AddAsync(ticket);
+                var created = await _db.SaveChangesAsync();
+                TempData["result"] = created;
+                return View();
+            }
+            else
+            {
+                var errors = ModelState.Select(x => x.Value.Errors)
+                    .Where(y => y.Count > 0)
+                    .ToList();
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Accept(string id)
+        {
+            var ticket = new SupportTicketVM() { ID = id, status = "Accepted" };
+            _db.SupportTickets.Attach(ticket);
+            _db.Entry(ticket).Property(x => x.status).IsModified = true;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("ViewSubmitTicket", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewProfile()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                UserVM userVM = new UserVM()
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    name = user.UserName,
+                    roleName = user.roleName,
+                    contactNumber = user.PhoneNumber
+                };
+                return View(userVM);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditDetails(UserVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = await _userManager.FindByIdAsync(model.id);
+                if (user != null)
+                {
+                    user.Id = model.id;
+                    user.UserName = model.name;
+                    user.Email = model.email;
+                    user.PhoneNumber = model.contactNumber;
+                    user.roleName = model.roleName;
+                }
+                IdentityResult result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ViewProfile", "Home");
+                }
+                foreach (var errors in result.Errors)
+                {
+                    ModelState.AddModelError("", errors.Description);
+                }
+            }
+            return RedirectToAction("ViewProfile", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return View();
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, model.Password, model.newPassword);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["Message"] = "Your password has been updated.";
+                return View();
+                ;
+            }
+            TempData["Message"] = "There is something wrong with your password.";
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AdminGetStaffList()
+        {
+            List<UserVM> staffList = (from list in _db.Users
+                                      where list.roleName == "Staff"
+                                      select new UserVM()
+                                      {
+                                          id = list.Id,
+                                          name = list.UserName,
+                                          email = list.UserName,
+                                          contactNumber = list.UserName,
+                                          roleName = list.roleName
+                                      }).ToList();
+            return View(staffList);
+        }
+
+        [HttpGet]
+        public IActionResult AdminGetCustomerList()
+        {
+            List<UserVM> customerList = (from list in _db.Users
+                                         where list.roleName == "Customer"
+                                         select new UserVM()
+                                         {
+                                             id = list.Id,
+                                             name = list.UserName,
+                                             email = list.UserName,
+                                             contactNumber = list.UserName,
+                                             roleName = list.roleName
+                                         }).ToList();
+            return View(customerList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewAccountById(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                ApplicationUser user = await _userManager.FindByIdAsync(id);
+                if (user != null)
+                {
+                    UserVM userVM = new UserVM()
+                    {
+                        id = user.Id,
+                        email = user.Email,
+                        name = user.UserName,
+                        contactNumber = user.PhoneNumber,
+                        roleName = user.roleName
+                    };
+                    return View(userVM);
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAccountById(UserVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = await _db.Users.FindAsync(model.id);
+                if (user == null)
+                {
+                    return View("Not found", $"User with Id = {model.id} cannot be found!");
+                }
+                user.UserName = model.name;
+                var updated = await _db.SaveChangesAsync();
+                return RedirectToAction("ViewAccountById", new { id = model.id });
+            }
+            return RedirectToAction("ViewAccountById", new { id = model.id });
+        }
+
+
+
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

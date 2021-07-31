@@ -1,0 +1,60 @@
+﻿@model IEnumerable<DDAC_Assignment_2._0.Models.SupportTicketVM>
+
+@{
+    ViewData["Title"] = "View Support Ticket";
+}
+
+<h1>View Support Ticket</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.message)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.message)
+            </td>
+            @*<td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>*@
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Accept</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
