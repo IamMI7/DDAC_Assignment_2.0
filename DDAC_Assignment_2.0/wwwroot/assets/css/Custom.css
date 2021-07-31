@@ -1,0 +1,27 @@
+﻿body {
+}
+
+.Description {
+    color: #999;
+    line-height: 1.4285;
+    padding-top:10px;
+    font-size:14px;
+}
+
+.Password-field{
+    padding-left:0;
+    padding-right:25px;
+    border-right:1px solid #ebebeb;
+    float:left;
+    width:50%;
+}
+
+.Password-information {
+    font-size:14px;
+    float: left;
+    margin: 0 25px;
+}
+
+.Password-information .Title-Section .title{
+    font-weight:bold;
+}

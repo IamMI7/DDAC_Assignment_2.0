@@ -1,59 +1,71 @@
 ﻿@model DDAC_Assignment_2._0.Models.RegisterVM
-    <div class="container">
-        <form method="post" asp-action="Register" asp-controller="Home">
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2">Username</label>
-                <div class="col-md-10">
-                    <input asp-for="userName" class="form-control" />
-                    <span asp-validation-for="userName" class="text-danger"></span>
-                </div>
+
+<div class="container">
+    <form method="post" asp-action="Register" asp-controller="Home">
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2">Username</label>
+            <div class="col-md-10">
+                <input asp-for="userName" class="form-control" />
+                <span asp-validation-for="userName" class="text-danger"></span>
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2">Email</label>
-                <div class="col-md-10">
-                    <input asp-for="email" class="form-control" />
-                    <span asp-validation-for="email" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2">Email</label>
+            <div class="col-md-10">
+                <input asp-for="email" class="form-control" />
+                <span asp-validation-for="email" class="text-danger"></span>
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2">Password</label>
-                <div class="col-md-10">
-                    <input asp-for="password" class="form-control" />
-                    <span asp-validation-for="password" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2">Password</label>
+            <div class="col-md-10">
+                <input asp-for="password" class="form-control" />
+                <span asp-validation-for="password" class="text-danger"></span>
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2">Confirm Password</label>
-                <div class="col-md-10">
-                    <input asp-for="confirmPassword" class="form-control" />
-                    <span asp-validation-for="confirmPassword" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2">Confirm Password</label>
+            <div class="col-md-10">
+                <input asp-for="confirmPassword" class="form-control" />
+                <span asp-validation-for="confirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2">Contact Number</label>
-                <div class="col-md-10">
-                    <input asp-for="contactNumber" class="form-control" />
-                    <span asp-validation-for="contactNumber" class="text-danger"></span>
-                </div>
+        </div>
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2">Contact Number</label>
+            <div class="col-md-10">
+                <input asp-for="contactNumber" class="form-control" />
+                <span asp-validation-for="contactNumber" class="text-danger"></span>
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <label class="col-md-2" asp-for="roleName"></label>
-                <div class="col-md-10">
-                    <input type="hidden" name="roleName" value="Customer" class="form-control" />
-                </div>
+        </div>
+        <div class="form-group row" style="margin-top:20px">
+            <label class="col-md-2" asp-for="roleName"></label>
+            <div class="col-md-10">
+                @if (User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.admin))
+                {
+                    <select asp-for="roleName" asp-items="@DDAC_Assignment_2._0.Helper.Utility.GetRolesDropDown(User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.admin))" class="form-control"></select>
+                    <span asp-validation-for="roleName" class="text-danger"></span>
+                }
+                else
+                {
+                    <select asp-for="roleName" asp-items="@DDAC_Assignment_2._0.Helper.Utility.GetRolesDropDown(User.IsInRole(DDAC_Assignment_2._0.Helper.Utility.customer))" class="form-control"></select>
+                    <span asp-validation-for="roleName" class="text-danger"></span>
+                }
+
             </div>
-            <div class="form-group row" style="margin-top:20px">
-                <div class="col-md-10 offset-md-2">
-                    <button type="submit" value="Register" class="btn btn-success">Register</button>
-                </div>
+        </div>
+
+        <div class="form-group row" style="margin-top:20px">
+            <div class="col-md-10 offset-md-2">
+                <button type="submit" value="Register" class="btn btn-success">Register</button>
             </div>
-            <p class="col-md-10 offset-md-2" style="margin-top:20px">
-                <a asp-action="Login">Sign In</a>
-            </p>
-        </form>
-    </div>
-    @section scripts{
-        <partial name="_ValidationScriptsPartial" />
-    }
+        </div>
+        <p class="col-md-10 offset-md-2" style="margin-top:20px">
+            <a asp-action="Login">Sign In</a>
+        </p>
+    </form>
+</div>
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
 
 
