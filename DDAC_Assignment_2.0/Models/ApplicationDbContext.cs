@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DDAC_Assignment_2._0.Models;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace DDAC_Assignment_2._0.Models
 {
