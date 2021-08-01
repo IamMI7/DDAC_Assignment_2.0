@@ -48,70 +48,73 @@
 
                     <div>
                         <p>
-                            <a asp-action="Create">Create New</a>
+                            <a asp-action="Create">Create New Upcycle Ideas</a>
                         </p>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Image)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Title)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Curator)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.DatePublish)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Message)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Material)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Status)
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Image)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Curator)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DatePublish)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Message)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Material)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Edit" asp-route-id="@item.IdeaID">Edit</a> |
-                                        <a asp-action="Details" asp-route-id="@item.IdeaID">Details</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.IdeaID">Delete</a>
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
+                        <div class="container">
+                            <table class="table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        @*<th>
+                                            @Html.DisplayNameFor(model => model.Image)
+                                        </th>*@
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Title)
+                                        </th>
+                                        @*<th>
+                                            @Html.DisplayNameFor(model => model.Curator)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DatePublish)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Message)
+                                        </th>*@
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Material)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Status)
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            @*<td style="width:40%">
+                                                @Html.DisplayFor(modelItem => item.Image)
+                                            </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </td>
+                                            @*<td>
+                                                @Html.DisplayFor(modelItem => item.Curator)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DatePublish)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Message)
+                                            </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Material)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                            </td>
+                                            <td>
+                                                <a asp-action="Edit" asp-route-id="@item.IdeaID">Edit</a> |
+                                                <a asp-action="Details" asp-route-id="@item.IdeaID">Details</a> |
+                                                <a asp-action="Delete" asp-route-id="@item.IdeaID">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                         </div>
+                        </div>
                     </div>
-                </div>
             </section><!-- End Ideas Page Section -->
 
         </main><!-- End #main -->

@@ -5,6 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDAC_Assignment_2._0.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace DDAC_Assignment_2._0.Controllers
 {
@@ -16,10 +21,29 @@ namespace DDAC_Assignment_2._0.Controllers
         //}
 
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ApplicationDbContext _db;
+        BlobtheController blob = new BlobtheController();
+        private readonly ILogger<IdeaVMsController> _logger;
 
-        public IdeaVMsController(ApplicationDbContext context)
+        //Blob Names:
+        string blobIdeasImg = "ideasblob";
+        string blobIdeasFile = "ideasfileblob";
+        string blobMatImg = "materialsblob";
+
+        public IdeaVMsController(ApplicationDbContext context, ILogger<HomeController> logger, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
+            , RoleManager<IdentityRole> roleManager, ApplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            //_logger = logger;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _db = db;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: IdeaVMs
@@ -49,6 +73,16 @@ namespace DDAC_Assignment_2._0.Controllers
         // GET: IdeaVMs/Create
         public IActionResult Create()
         {
+            List<MaterialsVM> model = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in model)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
             return View();
         }
 
@@ -57,15 +91,61 @@ namespace DDAC_Assignment_2._0.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdeaID,Image,Title,Curator,DatePublish,Message,Material")] IdeaVM ideaVM)
+        public IActionResult Create(IdeaVM model, IFormFile images, IFormFile document)
         {
-            if (ModelState.IsValid)
+            List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in mvm)
             {
-                _context.Add(ideaVM);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                y.Add(z.Material);
             }
-            return View(ideaVM);
+
+            ViewBag.Materials = y;
+
+
+            if (_signInManager.IsSignedIn(User))
+            {
+                string uname = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                if (ModelState.IsValid)
+                {
+
+                    IdeaVM data = new IdeaVM()
+                    {
+                        Title = model.Title,
+                        Curator = uname,
+                        DatePublish = DateTime.Now.Date,
+                        Material = model.Material,
+                        Image = uname + "@" + DateTime.Now.TimeOfDay + "#" + images.FileName,
+                        Message = uname + "@" + DateTime.Now.TimeOfDay + "#" + document.FileName
+                    };
+                    _db.Ideas.Add(data);
+                    _db.SaveChanges();
+                    blob.CreateBlobContainer(blobIdeasImg);
+                    blob.UploadBlob(images, data.Image, blobIdeasImg);
+                    blob.CreateBlobContainer(blobIdeasFile);
+                    blob.UploadBlob(document, data.Message, blobIdeasFile);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                ViewData["SignState"] = "NotSigned";
+                return View();
+            }
+            return View();
+
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(ideaVM);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //return View(ideaVM);
         }
 
         // GET: IdeaVMs/Edit/5
@@ -81,6 +161,32 @@ namespace DDAC_Assignment_2._0.Controllers
             {
                 return NotFound();
             }
+
+            List<MaterialsVM> model = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in model)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
+
+            List<String> models = new List<String>();
+            List<String> file = new List<String>();
+
+            List<IdeaVM> ivm = (from x in _db.Ideas select x).ToList();
+
+            foreach (var x in ivm)
+            {
+                models.Add(x.Image);
+                file.Add(x.Message);
+            }
+
+            models = blob.getBlobFileLink(models, blobIdeasImg);
+            file = blob.getBlobFileLink(file, blobIdeasFile);
+
             return View(ideaVM);
         }
 
@@ -89,8 +195,37 @@ namespace DDAC_Assignment_2._0.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdeaID,Image,Title,Curator,DatePublish,Message,Material,Status")] IdeaVM ideaVM)
+        public async Task<IActionResult> Edit(int id, IdeaVM ideaVM, IFormFile images, IFormFile document)
         {
+            List<MaterialsVM> mvm = (from x in _db.Materials select x).ToList();
+
+            List<String> y = new List<String>();
+
+            foreach (var z in mvm)
+            {
+                y.Add(z.Material);
+            }
+
+            ViewBag.Materials = y;
+
+            //List<String> model = new List<String>();
+            //List<String> file = new List<String>();
+
+            //List<IdeaVM> ivm = (from x in _db.Ideas select x).ToList();
+            
+            //string uname = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+            //string Image = uname + "@" + DateTime.Now.TimeOfDay + "#" + images.FileName;
+            //string Message = uname + "@" + DateTime.Now.TimeOfDay + "#" + document.FileName;
+            
+            //foreach (var x in ivm)
+            //{
+            //    model.Add(x.Image);
+            //    file.Add(x.Message);
+            //}
+
+            //model = blob.getBlobFileLink(model, blobIdeasImg);
+            //file = blob.getBlobFileLink(file, blobIdeasFile);
+
             if (id != ideaVM.IdeaID)
             {
                 return NotFound();
@@ -114,7 +249,7 @@ namespace DDAC_Assignment_2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "IdeaVMs");
             }
             return View(ideaVM);
         }

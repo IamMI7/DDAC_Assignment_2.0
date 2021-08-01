@@ -38,68 +38,51 @@
 <body>
 
     <main id="main">
-
         <!-- ======= Ideas Page Section ======= -->
-        <section id="portfolio" class="portfolio">
+        <section class="inner-page">
             <div class="container">
-
                 <div class="section-title">
-                    <h2>Create New Ideas</h2>
+                    <h2>Create New Idea</h2>
                 </div>
-
                 <div>
-                    <h1>Create</h1>
-
-                    <h4>IdeaVM</h4>
                     <hr />
                     <div class="row">
-                        <div class="col-md-4">
-                            <form asp-action="Create">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <div class="form-group">
-                                    <label asp-for="Image" class="control-label"></label>
-                                    <input asp-for="Image" class="form-control" />
-                                    <span asp-validation-for="Image" class="text-danger"></span>
+                        <section>
+                            <form method="post" enctype="multipart/form-data"
+                                  asp-controller="Home" asp-action="SubmitIdea" onsubmit="return checkFile()">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label>Title</label>
+                                        <input type="text" name="Title" class="form-control" id="title" required>
+                                    </div>
+                                    <div class="form-group col-md-6 mt-3 mt-md-0">
+                                        <label>Material</label>
+                                        <select asp-for="Material" asp-items='@(new SelectList(ViewBag.Materials,"Material"))' class="form-control" id="material" required></select>
+                                        <span asp-validation-for="Material" class="text-danger"></span>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Title" class="control-label"></label>
-                                    <input asp-for="Title" class="form-control" />
-                                    <span asp-validation-for="Title" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Curator" class="control-label"></label>
-                                    <input asp-for="Curator" class="form-control" />
-                                    <span asp-validation-for="Curator" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="DatePublish" class="control-label"></label>
-                                    <input asp-for="DatePublish" class="form-control" />
-                                    <span asp-validation-for="DatePublish" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Message" class="control-label"></label>
-                                    <input asp-for="Message" class="form-control" />
+                                <div class="form-group mt-3">
+                                    <label for="name">Please provide detailed steps and tools needed in a .txt, .docx, .doc, or .pdf file.</label>
+                                    <input type="file" id="messageFile" name="document" class="form-control" accept=".txt,.docx,.doc,.pdf" required />
                                     <span asp-validation-for="Message" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Material" class="control-label"></label>
-                                    <input asp-for="Material" class="form-control" />
-                                    <span asp-validation-for="Material" class="text-danger"></span>
+                                    <div class="form-group mt-3">
+                                        <p>Please upload a picture of your creation:</p>
+                                        <input type="file" id="uploadFile" name="images" class="form-control" accept=".jpg,.jpeg,.png" required />
+                                    </div>
                                 </div>
-                                <br />
-                                <div class="form-group">
-                                    <input type="submit" value="Create" class="btn btn-primary" />
+                                <input type="hidden" name="Message" value="test" />
+                                <div id="StatMsg"></div>
+                                <div class="form-group mt-3">
+                                    <input type="submit" value="Submit" style="margin-top:10px" class="btn btn-success" />
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                    <br />
-                    <div>
-                        <a asp-action="Index">Back to List</a>
+                        </section>
                     </div>
                 </div>
             </div>
-        </section><!-- End Ideas Page Section -->
+        </section>
 
     </main><!-- End #main -->
 
@@ -118,3 +101,46 @@
 </body>
 
 </html>
+
+<script>
+    @*window.onload = function () {
+        var getStatus = '@ViewData["SignState"]';
+        /*Create Room*/
+        if (getStatus == null || getStatus == "") {
+
+        } else if (getStatus == "NotSigned") {
+            document.getElementById("StatMsg").innerHTML = "Please Login or Register an account to submit an idea.";
+            document.getElementById("StatMsg").style.color = "#ff0033";
+        }
+    };*@
+
+    function checkFile() {
+        var fileElement = document.getElementById("uploadFile");
+        var fileExtension = "";
+        if (fileElement.value.lastIndexOf(".") > 0) {
+            fileExtension = fileElement.value.substring(fileElement.value.lastIndexOf(".") + 1, fileElement.value.length);
+        }
+        if (fileExtension.toLowerCase() == "jpg" || fileExtension.toLowerCase() == "jpeg" || fileExtension.toLowerCase() == "png") {
+            return true;
+        }
+        else {
+            alert("Only .jpg, .jpeg, and .png files are supported");
+            return false;
+        }
+    }
+
+    function checkFile2() {
+        var fileElement = document.getElementById("messageFile");
+        var fileExtension = "";
+        if (fileElement.value.lastIndexOf(".") > 0) {
+            fileExtension = fileElement.value.substring(fileElement.value.lastIndexOf(".") + 1, fileElement.value.length);
+        }
+        if (fileExtension.toLowerCase() == "txt" || fileExtension.toLowerCase() == "doc" || fileExtension.toLowerCase() == "docx" || fileExtension.toLowerCase() == "pdf") {
+            return true;
+        }
+        else {
+            alert("Only .txt, .doc, .docx, and .pdf files are supported");
+            return false;
+        }
+    }
+</script>
