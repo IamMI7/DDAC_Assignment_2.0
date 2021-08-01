@@ -50,25 +50,34 @@
                         <p>
                             <a asp-action="Create">Create New Upcycle Ideas</a>
                         </p>
+                        <div>
+                            <form>
+                                <!--comment: provide textbox for user to search flower based on name-->
+                                Enter Idea Title: <input type="text" name="Title" />
+                                Choose Material: @Html.DropDownList("Material", "All")
+                                <input type="submit" name="search" value="Search Idea" />
+                                <br /><br />
+                            </form>
+                        </div>
                         <div class="container">
                             <table class="table" style="width:100%">
                                 <thead>
                                     <tr>
                                         @*<th>
-                                            @Html.DisplayNameFor(model => model.Image)
-                                        </th>*@
+                            @Html.DisplayNameFor(model => model.Image)
+                        </th>*@
                                         <th>
                                             @Html.DisplayNameFor(model => model.Title)
                                         </th>
                                         @*<th>
-                                            @Html.DisplayNameFor(model => model.Curator)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.DatePublish)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Message)
-                                        </th>*@
+                            @Html.DisplayNameFor(model => model.Curator)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DatePublish)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Message)
+                        </th>*@
                                         <th>
                                             @Html.DisplayNameFor(model => model.Material)
                                         </th>
@@ -83,20 +92,20 @@
                                     {
                                         <tr>
                                             @*<td style="width:40%">
-                                                @Html.DisplayFor(modelItem => item.Image)
-                                            </td>*@
+                                @Html.DisplayFor(modelItem => item.Image)
+                            </td>*@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Title)
                                             </td>
                                             @*<td>
-                                                @Html.DisplayFor(modelItem => item.Curator)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DatePublish)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Message)
-                                            </td>*@
+                                @Html.DisplayFor(modelItem => item.Curator)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DatePublish)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Message)
+                            </td>*@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.Material)
                                             </td>
@@ -112,8 +121,8 @@
                                     }
                                 </tbody>
                             </table>
-                         </div>
                         </div>
+                    </div>
                     </div>
             </section><!-- End Ideas Page Section -->
 

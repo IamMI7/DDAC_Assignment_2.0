@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DDAC_Assignment_2._0.Controllers
 {
@@ -47,9 +48,27 @@ namespace DDAC_Assignment_2._0.Controllers
         }
 
         // GET: IdeaVMs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string Title, string Material)
         {
-            return View(await _context.Ideas.ToListAsync());
+            var ideas = from m in _context.Ideas
+                         select m;
+            if (!String.IsNullOrEmpty(Title))
+            {
+                ideas = ideas.Where(s => s.Title.Contains(Title));
+            }
+
+            //attach flower type values to dropdown list
+            IQueryable<string> TypeQuery = from m in _context.Ideas
+                                           orderby m.Material
+                                           select m.Material;
+            IEnumerable<SelectListItem> items = new SelectList(await TypeQuery.Distinct().ToListAsync());
+            ViewBag.Material = items;
+            //filtering based on flower type
+            if (!String.IsNullOrEmpty(Material))
+            {
+                ideas = ideas.Where(s => s.Material == Material);
+            }    
+                return View(await ideas.ToListAsync());
         }
 
         // GET: IdeaVMs/Details/5
